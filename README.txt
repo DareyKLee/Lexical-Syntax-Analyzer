@@ -1,3 +1,6 @@
+The initial framework of this program was given by Professor Mota (MSUDenver) for Principles of Programming
+	Languages, CS 3210.
+
 This program is a lexical and syntax analyzer for the language described by its grammar in 'grammar.txt'.
 
 The error detection works as expected for all the cases provided in 'source1.pas' through 'source15.pas', 
