@@ -7,6 +7,9 @@ from enum import Enum
 from tree import Tree
 import sys
 
+# Enable/Disable printing of the stack and input string in the console
+DEBUG = False
+
 ##########################################################
 #################### LEXICAL ANALYZER ####################
 ##########################################################
@@ -317,15 +320,17 @@ def parse(input, grammar, actions, gotos):
     stack = []
     stack.append(0)
     while True:
-        print("stack: ", end = "")
-        print(stack, end = " ")
-        print("input: ", end = "")
-        print(input, end = " ")
         state = stack[-1]
         token = input[0]
         action = actions[(state, token)]
-        print("action: ", end = "")
-        print(action)
+
+        if DEBUG:
+            print("stack: ", end = "")
+            print(stack, end = " ")
+            print("input: ", end = "")
+            print(input, end = " ")
+            print("action: ", end = "")
+            print(action)
 
         if action is None:
             special_words = ['program', 'var', 'begin', 'end', 'read', 'write', 'if', 'then', 'else', 'while', 'do']
