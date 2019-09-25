@@ -221,34 +221,26 @@ class Token(Enum):
 #########################################################
 
 def changeTokenToActualForm(entry):
-    if entry == 'addition':
-        return '+'
-    if entry == 'assignment':
-        return ':='
-    if entry == 'boolean_type':
-        return 'boolean'
-    if entry == 'colon':
-        return ':'    
-    if entry == 'equal':
-        return '='
-    if entry == 'greater':
-        return '>'
-    if entry == 'greater_equal':
-        return '>='
-    if entry == 'integer_type':
-        return 'integer'    
-    if entry == 'less':
-        return '<'
-    if entry == 'less_equal':
-        return '<='
-    if entry == 'multiplication':
-        return '*'
-    if entry == 'period':
-        return '.'   
-    if entry == 'semicolon':
-        return ';'         
-    if entry == 'subtraction':
-        return '-'
+    token_to_actual_form_dictionary = {
+        'addition' : '+',
+        'assignment' : ':=',
+        'boolean_type' : 'boolean',
+        'colon' : ':',
+        'equal' : '=',
+        'greater' : '>',
+        'greater_equal' : '>=',
+        'integer_type' : 'integer',
+        'less' : '<',
+        'less_equal' : '<=',
+        'multiplication' : '*',
+        'period' : '.',
+        'semicolon' : ';',
+        'subtraction' : '-'
+    }
+
+    if entry in token_to_actual_form_dictionary:
+        entry = token_to_actual_form_dictionary[entry]
+
     return entry
 
 # reads the given input and returns the grammar as a list of productions
