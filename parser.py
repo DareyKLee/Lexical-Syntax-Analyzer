@@ -165,7 +165,7 @@ def lex(word):
         for char in word:
             if not char.isdigit():
                 print(char)
-                raise Error_03('non-digit character present in integer literal')
+                raise Exception(errorMessage(3))
         lexeme_and_token.append((word, Token.INTEGER_LITERAL))
         integer_list.append(word)
 
@@ -173,43 +173,43 @@ def lex(word):
     elif word[0].isalpha():
         for char in word:
             if not char.isalpha() and not char.isdigit():
-                raise Error_03('non-alphanumeric character present in identifier')
+                raise Exception(errorMessage(3))
         lexeme_and_token.append((word, Token.IDENTIFIER))
         identifier_list.append(word)
     
     else:
-        raise Error_03('lexical error')
+        raise Exception(errorMessage(3))
     
 class Token(Enum):
-    ADDITION = 1
-    ASSIGNMENT = 2
-    BEGIN = 3
-    BOOLEAN_TYPE = 4
-    COLON = 5
-    DO = 6
-    ELSE = 7
-    END = 8
-    EQUAL = 9
-    FALSE = 10
-    GREATER = 11
-    GREATER_EQUAL = 12
-    IDENTIFIER = 13
-    IF = 14
+    ADDITION        = 1
+    ASSIGNMENT      = 2
+    BEGIN           = 3
+    BOOLEAN_TYPE    = 4
+    COLON           = 5
+    DO              = 6
+    ELSE            = 7
+    END             = 8
+    EQUAL           = 9
+    FALSE           = 10
+    GREATER         = 11
+    GREATER_EQUAL   = 12
+    IDENTIFIER      = 13
+    IF              = 14
     INTEGER_LITERAL = 15
-    INTEGER_TYPE = 16
-    LESS = 17
-    LESS_EQUAL = 18
-    MULTIPLICATION = 19
-    PERIOD = 20
-    PROGRAM = 21
-    READ = 22
-    SEMICOLON = 23
-    SUBTRACTION = 24
-    THEN = 25
-    TRUE = 26
-    VAR = 27
-    WHILE = 28
-    WRITE = 29
+    INTEGER_TYPE    = 16
+    LESS            = 17
+    LESS_EQUAL      = 18
+    MULTIPLICATION  = 19
+    PERIOD          = 20
+    PROGRAM         = 21
+    READ            = 22
+    SEMICOLON       = 23
+    SUBTRACTION     = 24
+    THEN            = 25
+    TRUE            = 26
+    VAR             = 27
+    WHILE           = 28
+    WRITE           = 29
 
 #########################################################
 #################### SYNTAX ANALYZER ####################
@@ -347,7 +347,7 @@ def parse(input, grammar, actions, gotos):
                         action_category_special_words = True
                     
                 if action_category_symbols and action_category_special_words:
-                    raise Error_99("syntax error")
+                    raise Exception(errorMessage(99))
 
             for entry in actions:
                 
@@ -355,25 +355,25 @@ def parse(input, grammar, actions, gotos):
 
                     for word in special_words:
                         if entry[1] == word:
-                            raise Error_08("special word missing")
+                            raise Exception(errorMessage(8))
                     
                     if stack[-2] == 'identifier' and input[0] == 'integer':
-                        raise Error_99("syntax error")
+                        raise Exception(errorMessage(99))
                     
                     for symbol in symbols:
                         if entry[1] == symbol:
-                            raise Error_09("symbol missing") 
+                            raise Exception(errorMessage(9)) 
                     
                     if entry[1] == 'integer' or entry[1] == 'boolean':
-                        raise Error_10("data type expected")
+                        raise Exception(errorMessage(10))
 
                     if stack[-2] in symbols and input[0] in symbols:
-                        raise Error_11('identifier or literal value expected')
+                        raise Exception(errorMessage(11))
 
                     if entry[1] == '$':
-                        raise Error_06('EOF expected')
+                        raise Exception(errorMessage(6))
 
-                    raise Error_07("{} expected".format(entry[1]))
+                    raise Exception(errorMessage(7))
 
         # shift operation
         if action[0] == 's':
@@ -442,6 +442,32 @@ def parse(input, grammar, actions, gotos):
 #########################################################
 ###################### ERROR CODES ######################
 #########################################################
+def errorMessage(code):
+    msg = "Error #" + str(code) + ": "
+    if code == 1:
+        return msg + "Source file missing"
+    if code == 2:
+        return msg + "Couldn't open source file"
+    if code == 3:
+        return msg + "Lexical error"
+    if code == 4:
+        return msg + "Couldn't open grammar file"
+    if code == 5:
+        return msg + "Couldn't open SLR table file"
+    if code == 6:
+        return msg + "EOF expected"
+    if code == 7:
+        return msg + "Identifier expected"
+    if code == 8:
+        return msg + "Special word missing"
+    if code == 9:
+        return msg + "Symbol missing"
+    if code == 10:
+        return msg + "Data type expected"        
+    if code == 11:
+        return msg + "Identifier or literal value expected"
+    if code == 99:
+        return msg + "Syntax error"
 
 class Error_01(Exception):
     pass
@@ -472,10 +498,12 @@ class Error_99(Exception):
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
-        raise Error_01("Source file missing")
-    source = open(sys.argv[1], "rt")
-    if not source:
-        raise Error_02("Couldn't open source file")
+        raise Exception("Source file missing")
+
+    try:
+        source = open(sys.argv[1], "rt")
+    except:
+        raise Exception("Couldn't open source file") from None
     
     file = source.readlines()
     source.close()
@@ -493,16 +521,20 @@ if __name__ == "__main__":
 
 ############ SYNTAX ANALYZER ############
 
-    input = open("grammar.txt", "rt")
-    if not input:
-        raise Error_04("Couldn't open grammar file")
+    try:
+        input = open("grammar.txt", "rt")
+    except:
+        raise Exception("Couldn't open grammar file") from None
+    
     grammar = loadGrammar(input)
     # printGrammar(grammar)
     input.close()
 
-    input = open("slr_table.csv", "rt")
-    if not input:
-        raise Error_05("Couldn't open SLR table file")
+    try:
+        input = open("slr_table.csv", "rt")
+    except:
+        raise Exception("Couldn't open SLR table file") from None
+    
     actions, gotos = loadTable(input)
     # printActions(actions)
     # printGotos(gotos)
@@ -536,4 +568,4 @@ if __name__ == "__main__":
         tree.print("")
 
     else:
-        raise Error_99("Syntax Error")
+        raise Exception(errorMessage(99))
