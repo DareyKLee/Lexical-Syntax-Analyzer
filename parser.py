@@ -165,7 +165,7 @@ def lex(word):
         for char in word:
             if not char.isdigit():
                 print(char)
-                raise Exception(errorMessage(3))
+                raise Exception(errorMessage(3) + " - non-digit character present in integer literal")
         lexeme_and_token.append((word, Token.INTEGER_LITERAL))
         integer_list.append(word)
 
@@ -173,7 +173,7 @@ def lex(word):
     elif word[0].isalpha():
         for char in word:
             if not char.isalpha() and not char.isdigit():
-                raise Exception(errorMessage(3))
+                raise Exception(errorMessage(3) + " - non-alphanumeric character present in identifier")
         lexeme_and_token.append((word, Token.IDENTIFIER))
         identifier_list.append(word)
     
@@ -469,41 +469,16 @@ def errorMessage(code):
     if code == 99:
         return msg + "Syntax error"
 
-class Error_01(Exception):
-    pass
-class Error_02(Exception):
-    pass
-class Error_03(Exception):
-    pass
-class Error_04(Exception):
-    pass
-class Error_05(Exception):
-    pass
-class Error_06(Exception):
-    pass
-class Error_07(Exception):
-    pass
-class Error_08(Exception):
-    pass
-class Error_09(Exception):
-    pass
-class Error_10(Exception):
-    pass
-class Error_11(Exception):
-    pass 
-class Error_99(Exception):
-    pass
-
 # main
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
-        raise Exception("Source file missing")
+        raise Exception(errorMessage(1))
 
     try:
         source = open(sys.argv[1], "rt")
     except:
-        raise Exception("Couldn't open source file") from None
+        raise Exception(errorMessage(2)) from None
     
     file = source.readlines()
     source.close()
@@ -524,7 +499,7 @@ if __name__ == "__main__":
     try:
         input = open("grammar.txt", "rt")
     except:
-        raise Exception("Couldn't open grammar file") from None
+        raise Exception(errorMessage(4)) from None
     
     grammar = loadGrammar(input)
     # printGrammar(grammar)
@@ -533,7 +508,7 @@ if __name__ == "__main__":
     try:
         input = open("slr_table.csv", "rt")
     except:
-        raise Exception("Couldn't open SLR table file") from None
+        raise Exception(errorMessage(5)) from None
     
     actions, gotos = loadTable(input)
     # printActions(actions)
