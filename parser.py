@@ -10,12 +10,17 @@ import sys
 # Enable/Disable printing of the stack and input string in the console
 DEBUG = False
 
+#########################################################
+########### LIST OF SYMBOLS AND SPECIAL WORDS ###########
+#########################################################
+special_words = ['program', 'var', 'begin', 'end', 'read', 'write', 'if', 'then', 'else', 'while', 'do']
+symbols = [':=', '>=', '<=', ':', '=', '>', '<', '*', '.', ';', '-', '+']
+
 ##########################################################
 #################### LEXICAL ANALYZER ####################
 ##########################################################
 
 def parseFile():
-    symbols = [':=', '>=', '<=', ':', '=', '>', '<', '*', '.', ';', '-', '+']
     input_string = []
     temp_list_of_elements = []
     final_string = []
@@ -333,8 +338,6 @@ def parse(input, grammar, actions, gotos):
             print(action)
 
         if action is None:
-            special_words = ['program', 'var', 'begin', 'end', 'read', 'write', 'if', 'then', 'else', 'while', 'do']
-            symbols = [':=', '>=', '<=', ':', '=', '>', '<', '*', '.', ';', '-', '+']
 
             action_category_symbols = False
             action_category_special_words = False
