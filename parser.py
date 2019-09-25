@@ -528,7 +528,7 @@ if __name__ == "__main__":
         print("##### LEXEME AND TOKENS ######")
         print("##############################")
         for (lexeme, token) in lexeme_and_token:
-            print(lexeme, token)
+            print(lexeme, token, "#{}".format(token.value))
 
         print("##############################")
         print("######### PARSE TREE #########")
